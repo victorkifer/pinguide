@@ -1,0 +1,37 @@
+Format
+====================
+1. Image features (refer Table 1 in the paper): pins.csv.gz
+Format: 
+anonymized_pin_id | 14 Image quality features | 1000 Object features | 4096 Deep learning features | pinner profile features (6) | pinner category preference (32) 
+(The position of each image quality and object features will be also be provided.)
+
+Feature positions:
+- 14 Image quality features: refer image_quality_fea.txt (each line is a feature) 
+- 1000 Object features: refer: image_objects.txt (each line is a object feature)
+- Pinner profile features: the profile features of the user pin the image, with following order:
+	- Pinboard number
+	- Private pinboard number
+	- Pins number
+	- Likes number
+	- Follower number
+	- Following number
+- Pinner category preference: category number refer cate_id.txt
+
+2. User features (Table 1): users.csv.gz
+Format: 
+anonymized_user_id | board_count | pin_count | like_count | follower_count | following_count | 32 user category preference (category name refer cate_id.txt)
+(The object preference can be calculated from object features in 2.)
+
+
+3. Repin activity: repins.csv.gz
+Format:
+anonymized_user_id | anonymized_pin_id | category | anonymized_board_id
+(ranked by creation time, ground truth and training data for machine learning) 
+
+Additional data
+================
+ We have anonymised the pin_ids and the user_ids to preserve privacy. To allow researchers to construct other features for the same image, we can provide a link to the image in the Pinterest media cache, which is not traceable to the original image pinned or the user who pinned it. This would be in the format: 
+
+anonymized_pin_id | Image URL in Pinterest media cache
+
+If you need this, please explicitly ask for this in your request. We reiterate that a key condition of sharing this dataset is that we explicitly forbid any attempt to link these cached images to Pinterest pins or user_ids. This condition applies to the image URLs too.

@@ -1,7 +1,9 @@
 ###############################
 ### Project specific files
 ###############################
-**/generated
+**/generated/
+input/*.csv
+*.gz
 
 ###############################
 ### OS temporary files
