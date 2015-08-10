@@ -11,7 +11,7 @@ and is based on the publicly available [dataset](http://www.inf.kcl.ac.uk/staff/
 ### Getting started
 
 ```
-git clone %URL% aacimp
+git clone %PROJECT_CLONE_URL% aacimp
 cd aacimp
 git checkout dev
 cp config.py-template config.py
