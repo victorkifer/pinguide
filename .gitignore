@@ -2,8 +2,9 @@
 ### Project specific files
 ###############################
 **/generated/
-input/*.csv
-*.gz
+*.csv
+config.py
+**/.ipynb_checkpoints/
 
 ###############################
 ### OS temporary files

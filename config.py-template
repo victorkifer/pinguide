@@ -1,0 +1,10 @@
+# THIS FILE IS A TEMPLATE FOR PROJECT CONFIG FILE
+#
+# BEFORE starting working on the project
+# copy the content of this file
+# int new `config.py` file
+# and provide correct values for all params
+#
+
+# Path to input data folder
+INPUT_DATA_FOLDER = '/path/to/input'
