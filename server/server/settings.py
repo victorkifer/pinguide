@@ -27,6 +27,8 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'rest_framework',
     'pinguide_web',
+    'pinguide_logic',
+    'pinguide_api',
 )
 
 MIDDLEWARE_CLASSES = (
