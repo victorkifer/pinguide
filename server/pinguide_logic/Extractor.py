@@ -8,16 +8,13 @@ import time
 
 import caffe
 
-def extract_for_dir(dir):
-    input_file = os.path.expanduser(dir)
-    output_file = dir + 'output.npy'
-    ext = 'jpg'
+__CLASSIFIER = None
 
+def __init_classifier():
     model_def = CAFFE_DIR + '/models/bvlc_reference_caffenet/deploy.prototxt'
     pretrained_model = CAFFE_DIR + '/models/bvlc_reference_caffenet/bvlc_reference_caffenet.caffemodel'
     mean_file = CAFFE_DIR + '/python/caffe/imagenet/ilsvrc_2012_mean.npy'
     channel_swap_data = '2,1,0'
-    center_only = False
     input_scale = 1.0
     raw_scale = 255.0
     images_dim = '256,256'
@@ -28,21 +25,29 @@ def extract_for_dir(dir):
 
     mean, channel_swap = None, None
     if mean_file:
-        mean = np.load(mean_file)
+        mean = np.load(mean_file).mean(1).mean(1)
     if channel_swap_data:
         channel_swap = [int(s) for s in channel_swap_data.split(',')]
 
-    # Make classifier.
     classifier = caffe.Classifier(model_def, pretrained_model,
             image_dims=image_dims, mean=mean,
             input_scale=input_scale, raw_scale=raw_scale,
             channel_swap=channel_swap)
 
-    # classifier = caffe.Classifier()
-    print('Classifier created')
+    global __CLASSIFIER
+    __CLASSIFIER = classifier
+
+def extract_for_dir(dir):
+    input_file = os.path.expanduser(dir)
+    output_file = dir + 'output.npy'
+    ext = 'jpg'
+
+    if __CLASSIFIER is None:
+        __init_classifier()
+
+    center_only = False
 
     # Load numpy array (.npy), directory glob (*.jpg), or image file.
-
     if input_file.endswith('npy'):
         print("Loading file: %s" % input_file)
         inputs = np.load(input_file)
@@ -58,9 +63,7 @@ def extract_for_dir(dir):
 
     # Classify.
     start = time.time()
-    predictions = classifier.predict(inputs, not center_only)
+    predictions = __CLASSIFIER.predict(inputs, not center_only)
     print("Done in %.2f s." % (time.time() - start))
 
-    # Save
-    print("Saving results into %s" % output_file)
-    np.save(output_file, predictions)
+    return predictions

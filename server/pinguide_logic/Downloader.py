@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 import time
 import os
 import shutil
+import ImageProcessor
 
 ##########################################################
 def __fetch_file(link) :
@@ -54,11 +55,19 @@ def fetch_images(nickname, board_name):
     time.sleep(0.1)
     link = link["src"]
     filename = link[link.rindex("/"):]
-    with open(dir + filename, 'wb+') as f:
+    with open(dir + filename + '.tmp', 'wb+') as f:
       f.write(__fetch_file(link))
 
+    ImageProcessor.resize_and_crop(
+      dir + filename + '.tmp',
+      dir + filename,
+      (256, 256),
+      crop_type='middle'
+    )
+
+
 ##########################################################
-def remove_images(nickname, board_name):
+def remove_download(nickname, board_name):
   dir = get_dir(nickname, board_name)
   shutil.rmtree(dir, True)
 

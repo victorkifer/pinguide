@@ -15,17 +15,18 @@ def recommend(req):
 
   response = None
   if nickname is None or board_name is None:
+    print 'No data'
     response = {
       'status': -1,
-      'error': 'Required fields: nickname, board_id'
+      'error': 'Required fields: nickname, board_name'
     }
   else:
-    response = None
     try:
       Downloader.fetch_images(nickname, board_name)
       dir = Downloader.get_dir(nickname, board_name)
+      print 'Images downloaded'
 
-      Extractor.extract_for_dir(dir)
+      image_features = Extractor.extract_for_dir(dir)
 
       images = Image.objects.all()[:20]
       json_data = [image.as_json() for image in images]
@@ -34,11 +35,12 @@ def recommend(req):
         'status': 0,
         'data': json_data
       }
-    except IOError as e:
+    except BaseException as e:
       response = {
         'status': 500,
-        'error': e.strerror
+        'error': e.message
       }
-      print e
+    finally:
+      Downloader.remove_download(nickname, board_name)
 
   return HttpResponse(json.dumps(response), content_type='json')
