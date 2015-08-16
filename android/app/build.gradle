@@ -1,0 +1,81 @@
+apply plugin: 'com.android.application'
+
+android {
+  compileSdkVersion 22
+  buildToolsVersion "22.0.1"
+
+  defaultConfig {
+    applicationId "com.aacimp.aacimp_interest"
+    minSdkVersion 14
+    targetSdkVersion 22
+    versionCode 1
+    versionName "1.0"
+  }
+  buildTypes {
+    release {
+      minifyEnabled false
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+    }
+  }
+
+  lintOptions {
+    disable 'InvalidPackage'
+  }
+
+  packagingOptions {
+    exclude 'META-INF/ASL2.0'
+    exclude 'META-INF/DEPENDENCIES.txt'
+    exclude 'META-INF/LICENSE.txt'
+    exclude 'META-INF/NOTICE.txt'
+    exclude 'META-INF/NOTICE'
+    exclude 'META-INF/LICENSE'
+    exclude 'META-INF/DEPENDENCIES'
+    exclude 'META-INF/notice.txt'
+    exclude 'META-INF/license.txt'
+    exclude 'META-INF/dependencies.txt'
+    exclude 'META-INF/LGPL2.1'
+    exclude 'META-INF/services/javax.annotation.processing.Processor'
+    exclude 'LICENSE.txt'
+  }
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_7
+    targetCompatibility JavaVersion.VERSION_1_7
+  }
+
+}
+
+dependencies {
+  compile fileTree(dir: 'libs', include: ['*.jar'])
+  compile 'com.android.support:appcompat-v7:22.2.1'
+
+  compile 'com.android.support:appcompat-v7:22.2.1'
+  compile 'com.android.support:cardview-v7:22.2.1'
+  compile 'com.android.support:recyclerview-v7:22.2.1'
+  compile 'com.android.support:support-v4:22.2.1'
+  compile 'com.android.support:design:22.2.1'
+  compile 'com.android.support:palette-v7:22.2.1'
+  // support for multi-dex applications for android < 5.0
+  compile 'com.android.support:multidex:1.0.0'
+
+  // memory leaks detection
+  debugCompile 'com.squareup.leakcanary:leakcanary-android:1.3.1'
+  releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.3.1'
+
+  // views injection
+  compile 'com.jakewharton:butterknife:7.0.0'
+  // async image loading
+  compile 'com.github.bumptech.glide:glide:3.6.1'
+  // events broadcasting
+  compile 'de.greenrobot:eventbus:2.4.0'
+
+  // json processing
+  compile 'com.fasterxml.jackson.core:jackson-core:2.6.0'
+  compile 'com.fasterxml.jackson.core:jackson-databind:2.6.0'
+  compile 'com.fasterxml.jackson.core:jackson-annotations:2.6.0'
+  // easy api interface
+  compile 'com.squareup.retrofit:retrofit:1.9.0'
+  // code validation
+  compile 'com.android.support:support-annotations:22.2.0'
+
+  compile project(':pdk')
+}
