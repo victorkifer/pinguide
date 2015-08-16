@@ -25,9 +25,9 @@
   <script type="text/javascript">
     function getData() {
       var nick = document.forms["reg"].elements["nickname"].value
-      var board_id = document.forms["reg"].elements["board"].value
+      var board_name = document.forms["reg"].elements["board"].value
 
-      if (nick == undefined || board_id == undefined || nick == '' || board_id == ''){
+      if (nick == undefined || board_name == undefined || nick == '' || board_name == ''){
         alert("Please,complete all required fields!")
         return false;
       } else {
@@ -37,7 +37,7 @@
             "/api/v1/recommend",
             {
               nickname: nick,
-              board_id: board_id
+              board_name: board_name
             })
           .done(function( response ) {
             $("#modalWindow").modal('hide')
