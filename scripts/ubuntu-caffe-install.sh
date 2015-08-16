@@ -1,24 +1,32 @@
 #!/bin/bash
 
-sudo apt-get install -y libprotobuf-dev libleveldb-dev libsnappy-dev libhdf5-serial-dev protobuf-compiler
-sudo apt-get install -y libopencv-dev python-opencv
-sudo apt-get install -y libboost1.55-all-dev
+sudo apt-get install -y libprotobuf-dev libleveldb-dev libsnappy-dev libhdf5-serial-dev protobuf-compiler\
+	libopencv-dev python-opencv libboost1.55-all-dev libatlas-base-dev clang python-dev\
+	libgflags-dev libgoogle-glog-dev liblmdb-dev\
+	python-skimage python-pip
 
-sudo apt-get install -y libatlas-base-dev
-sudo apt-get install -y python-dev
-sudo apt-get install -y libgflags-dev libgoogle-glog-dev liblmdb-dev
+sudo pip install protobuf
 
-if [ ! -f master.zip ];
+if [ ! -d caffe ];
 then
-	wget https://github.com/BVLC/caffe/archive/master.zip
-fi
-if [ ! -d caffe-master ];
-then
+	if [ ! -f master.zip ];
+	then
+		wget https://github.com/BVLC/caffe/archive/master.zip
+	fi
+
+	rm -R caffe-master
 	unzip master.zip
+	mv caffe-master caffe
 fi
-cd caffe-master
+
+cd caffe
 cp Makefile.config.example Makefile.config
 echo "CPU_ONLY := 1" >> Makefile.config
 make all
 make test
 make runtest
+make pycaffe
+
+wget http://dl.caffe.berkeleyvision.org/bvlc_reference_caffenet.caffemodel
+mv bvlc_reference_caffenet.caffemodel models/bvlc_reference_caffenet/
+

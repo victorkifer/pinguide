@@ -1,0 +1,1 @@
+CAFFE_DIR = '../scripts/caffe'

@@ -1,11 +1,9 @@
 import json
-import sys
 from django.http import HttpResponse
 
 from models import *
 
-sys.path.append('..')
-from pinguide_logic import Downloader
+from pinguide_logic import Downloader,Extractor
 
 def index(req):
   return HttpResponse("PinGuide API")
@@ -22,15 +20,25 @@ def recommend(req):
       'error': 'Required fields: nickname, board_id'
     }
   else:
-    Downloader.fetch_images(nickname, board_name)
-    dir = Downloader.get_dir(nickname, board_name)
+    response = None
+    try:
+      Downloader.fetch_images(nickname, board_name)
+      dir = Downloader.get_dir(nickname, board_name)
 
-    images = Image.objects.all()[:20]
-    json_data = [image.as_json() for image in images]
+      Extractor.extract_for_dir(dir)
 
-    response = {
-      'status': 0,
-      'data': json_data
-    }
+      images = Image.objects.all()[:20]
+      json_data = [image.as_json() for image in images]
+
+      response = {
+        'status': 0,
+        'data': json_data
+      }
+    except IOError as e:
+      response = {
+        'status': 500,
+        'error': e.strerror
+      }
+      print e
 
   return HttpResponse(json.dumps(response), content_type='json')

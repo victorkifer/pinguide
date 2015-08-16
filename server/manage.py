@@ -1,6 +1,10 @@
 #!/usr/bin/python
 import os
 import sys
+from pinguide_config import *
+
+sys.path.append('.')
+sys.path.append(CAFFE_DIR + '/python')
 
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "server.settings")
