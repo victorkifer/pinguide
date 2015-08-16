@@ -21,102 +21,68 @@
 
   <script src="{% static 'js/jquery.min.js' %}"></script>
   <script src="{% static 'js/bootstrap.min.js' %}"></script>
+  <script src="{% static 'js/pinguide.login.js' %}"></script>
+	<script src="{% static 'js/blocksit.min.js' %}"></script>
 
   <script type="text/javascript">
     function getData() {
-      var nick = document.forms["reg"].elements["nickname"].value
-      var board_name = document.forms["reg"].elements["board"].value
+      var nick = $('.try_form #nickname').val()
+      var board_name = $('.try_form #board').val()
 
-      if (nick == undefined || board_name == undefined || nick == '' || board_name == ''){
-        alert("Please,complete all required fields!")
-        return false;
-      } else {
-        $("#modalWindow").modal('show')
-
-        $.get(
-            "/api/v1/recommend",
-            {
-              nickname: nick,
-              board_name: board_name
-            })
-          .done(function( response ) {
-            $("#modalWindow").modal('hide')
-
-            if (response['status'] != 0) {
-              alert(response['error']);
-              return;
-            }
-
-            images = response['data'];
-            for (index = 0; index < images.length; ++index) {
-                console.log(images[index]['url']);
-            }
-          })
-          .fail(function(jqXHR, textStatus) {
-            $("#modalWindow").modal('hide')
-            alert('An error occurred: ' + textStatus);
-          });
-      }
+      loadRecommendationFor(nick, board_name);
     }
   </script>
 </head>
 <body>
   <div id="modalWindow" class="modal hide fade" data-backdrop="static">
     <div class="modal-header">
-      <h3><font color = "grey"><i>Please, wait for a moment...</i></font></h3>
-      <h3><font color = "red"><i>Your recommendations are running to you!</i></font></h3>
+      <h3><font color="grey"><i>Please, wait for a moment...</i></font></h3>
+      <h3><font color="red"><i>Your recommendations are running to you!</i></font></h3>
     </div>
     <div class="modal-body">
-	    <center><p><img src="{% static 'img/giphy.gif' %}"></p></center>
+	    <center><p><img src="{% static 'img/loading.gif' %}"></p></center>
     </div>
 	</div>
 
-  <div class="container">
-    <h1><big>Check it out!</big></h1>
-    <br><h1 class="d2line">Now you have a great opportunity to use your personal <font color = "red">PinGuide</font>!</h1>
-    <br><br>
-    <hr>
+  <div id='container'>
+	  	<div id='header'>
+	  		<h1><big>PinGuide</big></h1>
+	       	<h2 class="d2line">Content-based recommendation system for Pinterest social network</h2>
+	  	</div>
+	  	<hr/>
 
-    <h3><font color = "red">How it works?</font></h3>
+	 	<div id='content'>
+	 		<div class="block">
+				<h3><font color="red">How it works?</font></h3>
+				<div class="block-content">
+					<img src="{% static 'img/7.jpg' %}" align="right">
+					<h5 class="dline">Pinterest is an image bookmarking and sharing social network, where users look for web images and pin them into their personal pin boards. To facilitate Pinterest users in their search for interesting image content we propose a recommendation system, which learns to recognize user's preferences and predict which other images a user might be interested in. We describe the content of images and user's preferences with over 6K features, extracted with the state-of-the-art deep convolutional neural network and formalize the recommendation problem as a supervised learning task, where for a user U and an image I we train a binary classifier to predict whether U will pin I or not.</h5>
+				</div>
+			</div>
 
-    <h5 class="dline"><img src="{% static 'img/7.jpg' %}" align="right">Pinterest is an image bookmarking and sharing social network, where users look for web images and</h5>
-    <h5 class="dline">pin them into their personal pin boards. To facilitate Pinterest users in their search for interesting</h5>
-    <h5 class="dline">image content we propose a recommendation system, which learns to recognize user`s preferences and</h5>
-    <h5 class="dline">predict which other images a user might be interested in. We describe the content of images and user`s  </h5>
-    <h5 class="dline">preferences with over 6K features, extracted with the state-of-the-art deep convolutional neural network</h5>
-    <h5 class="dline">and formalize the recommendation problem as a supervised learning task, where for a user U and an image I</h5>
-    <h5 class="dline">we train a binary classifier to predict whether U will pin I or not.</h5>
-    <br><br>
+			<div class="block try_form">
+				<h3><font color = "red">Let's try!</font></h3>
+				<form id='' action='#' method="get">
+					<div class="form-group">
+				  		<label for="nickname">Nickname</label>
+				  		<input id="nickname" name="nickname" type="text" class="form-control" placeholder="Enter your Nickname"/>
+				 	</div>
+				 	<div class="form-group">
+				  		<label for="board">Board</label>
+				  		<input id="board" name="board" type="text" class="form-control" placeholder="Enter board name"/>
+				 	</div>
+				 	<button type="button" class="btn btn-danger" onclick="getData()">Submit</button>
+				</form>
+			</div>
+	 	</div>
+	 	<div class="clear_fix"> </div>
 
-    <h3><font color = "red">Let`s try!</font></h3>
-    <h5><img src="{% static 'img/images.png' %}" align="right">Fill out the fields below:</h5>
-    <h4 align="right"><font color = "red"><i>Pin it with</i></font></h4>
-    <br>
-
-    <form id = "reg" name = "reg" role="form">
-      <div class="form-group">
-        <label for="nickname">Nickname</label>
-        <input id="nickname" type="nickname" class="form-control" placeholder="Enter your Nickname">
-        <p class="help-block">Here you should tipe your Nickname from Pinterest</p>
-      </div>
-      <div class="form-group">
-        <label for="board"><img src="{% static 'img/4.jpg' %}" align="right">Board</label>
-        <input id="board" class="form-control" placeholder="Enter board`s name">
-        <p class="help-block">Enter your board`s name. Based on Pins from this board PinGuide will make recommendations.</p>
-        <br>
-      </div>
-
-      <a role="button" class="btn btn-danger" onClick="getData()">Submit</a>
-    </form>
-    <br><br>
-
-    <center>
-      <p>© SummerSchool 2015</p>
-    </center>
-
-    <br><br>
-
-  </div><!-- /container -->
+		<hr/>
+		<div id='footer'>
+			<p>Copyright &copy; X AACIMP Summer School 2015</p>
+			<p>V.Kifer, A. Turchyn, A. Nimets. Supervisor D. Karamshuk</p>
+		</div>
+	</div><!-- /container -->
 
 </body>
 </html>
