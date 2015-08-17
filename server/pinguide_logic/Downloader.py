@@ -68,7 +68,7 @@ def fetch_images(nickname, board_name):
 
 ##########################################################
 def remove_download(nickname, board_name):
-  dir = get_dir(nickname, board_name)
+  dir = 'out/' + nickname + '/'
   shutil.rmtree(dir, True)
 
 # fetch_images('https://www.pinterest.com/nick_goodey/under-the-sea/')

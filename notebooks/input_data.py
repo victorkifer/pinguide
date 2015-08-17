@@ -1,4 +1,4 @@
-from pinguide_config import *
+from config import *
 
 INPUT_IMAGES = INPUT_DATA_FOLDER + '/pin_images.csv'
 INPUT_PINS = INPUT_DATA_FOLDER + '/pins.sample.csv'
