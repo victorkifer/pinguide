@@ -38,7 +38,7 @@ def recommend(req):
     except BaseException as e:
       response = {
         'status': 500,
-        'error': e.message
+        'error': str(e)
       }
     finally:
       Downloader.remove_download(nickname, board_name)

@@ -9,6 +9,7 @@ import time
 import caffe
 
 __CLASSIFIER = None
+__TRANSFORMER = None
 
 def __init_classifier():
     model_def = CAFFE_DIR + '/models/bvlc_reference_caffenet/deploy.prototxt'
@@ -29,23 +30,26 @@ def __init_classifier():
     if channel_swap_data:
         channel_swap = [int(s) for s in channel_swap_data.split(',')]
 
-    classifier = caffe.Classifier(model_def, pretrained_model,
-            image_dims=image_dims, mean=mean,
-            input_scale=input_scale, raw_scale=raw_scale,
-            channel_swap=channel_swap)
+    classifier = caffe.Net(model_def, pretrained_model, caffe.TEST)
+
+    transformer = caffe.io.Transformer({'data': classifier.blobs['data'].data.shape})
+    transformer.set_transpose('data', (2,0,1))
+    transformer.set_mean('data', mean) # mean pixel
+    transformer.set_raw_scale('data', raw_scale)  # the reference model operates on images in [0,255] range instead of [0,1]
+    transformer.set_channel_swap('data', channel_swap)  # the reference model has channels in BGR order instead of RGB
 
     global __CLASSIFIER
     __CLASSIFIER = classifier
 
+    global __TRANSFORMER
+    __TRANSFORMER = transformer
+
 def extract_for_dir(dir):
     input_file = os.path.expanduser(dir)
-    output_file = dir + 'output.npy'
     ext = 'jpg'
 
     if __CLASSIFIER is None:
         __init_classifier()
-
-    center_only = False
 
     # Load numpy array (.npy), directory glob (*.jpg), or image file.
     if input_file.endswith('npy'):
@@ -61,9 +65,17 @@ def extract_for_dir(dir):
 
     print("Classifying %d inputs." % len(inputs))
 
-    # Classify.
-    start = time.time()
-    predictions = __CLASSIFIER.predict(inputs, not center_only)
-    print("Done in %.2f s." % (time.time() - start))
+    __CLASSIFIER.blobs['data'].reshape(50,3,227,227)
+    __CLASSIFIER.blobs['data'].data[...] = __TRANSFORMER.preprocess('data', inputs[0])
+    __CLASSIFIER.forward()
 
-    return predictions
+    print __CLASSIFIER.blobs['fc8'].data[0].shape
+    print __CLASSIFIER.blobs['fc7'].data[0].shape
+    
+    return __CLASSIFIER.blobs['fc8'].data[0] + __CLASSIFIER.blobs['fc7'].data[0]
+    # Classify.
+    # start = time.time()
+    # predictions = __CLASSIFIER.predict(inputs, not center_only)
+    # print("Done in %.2f s." % (time.time() - start))
+
+    # return predictions
