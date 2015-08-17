@@ -71,8 +71,8 @@ def extract_for_dir(dir):
 
     print __CLASSIFIER.blobs['fc8'].data[0].shape
     print __CLASSIFIER.blobs['fc7'].data[0].shape
-    
-    return __CLASSIFIER.blobs['fc8'].data[0] + __CLASSIFIER.blobs['fc7'].data[0]
+
+    return __CLASSIFIER.blobs['fc8'].data[0].tolist() + __CLASSIFIER.blobs['fc7'].data[0].tolist()
     # Classify.
     # start = time.time()
     # predictions = __CLASSIFIER.predict(inputs, not center_only)
