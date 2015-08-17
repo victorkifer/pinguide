@@ -43,9 +43,16 @@ function displayImages(images) {
 	}
 	$('#content').html(html);
 
-	$('#content').BlocksIt({
-	    numOfCol: 4,
-	    offsetX: 8,
-	    offsetY: 8
-	});
+    organize();
+    imagesLoaded( '#container', function() {
+        organize();
+    });
+}
+
+function organize() {
+    $('#content').BlocksIt({
+        numOfCol: 4,
+        offsetX: 8,
+        offsetY: 8
+    });
 }
