@@ -11,6 +11,9 @@ import caffe
 __CLASSIFIER = None
 __TRANSFORMER = None
 
+def init():
+    __init_classifier()
+
 def __init_classifier():
     model_def = CAFFE_DIR + '/models/bvlc_reference_caffenet/deploy.prototxt'
     pretrained_model = CAFFE_DIR + '/models/bvlc_reference_caffenet/bvlc_reference_caffenet.caffemodel'
@@ -65,14 +68,22 @@ def extract_for_dir(dir):
 
     print("Classifying %d inputs." % len(inputs))
 
-    __CLASSIFIER.blobs['data'].reshape(50,3,227,227)
-    __CLASSIFIER.blobs['data'].data[...] = __TRANSFORMER.preprocess('data', inputs[0])
-    __CLASSIFIER.forward()
+    __CLASSIFIER.blobs['data'].reshape(50, 3, 227, 227)
 
-    print __CLASSIFIER.blobs['fc8'].data[0].shape
-    print __CLASSIFIER.blobs['fc7'].data[0].shape
+    # features = []
+    processed_inputs = []
+    for input in inputs:
+        processed_inputs.append(__TRANSFORMER.preprocess('data', input))
 
-    return __CLASSIFIER.blobs['fc8'].data[0].tolist() + __CLASSIFIER.blobs['fc7'].data[0].tolist()
+    __CLASSIFIER.forward_all(data=np.array(processed_inputs))
+
+    # __CLASSIFIER.blobs['data'].data[...] = __TRANSFORMER.preprocess('data', input)
+    #   __CLASSIFIER.forward()
+    #
+    #   features.append(__CLASSIFIER.blobs['fc8'].data[0].tolist())
+
+
+    return __CLASSIFIER.blobs['fc8'].data[0].tolist()
     # Classify.
     # start = time.time()
     # predictions = __CLASSIFIER.predict(inputs, not center_only)

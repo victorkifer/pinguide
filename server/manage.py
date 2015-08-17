@@ -12,5 +12,8 @@ if __name__ == "__main__":
     from pinguide_logic import RFC
     RFC.init()
 
+    from pinguide_logic import Extractor
+    Extractor.init()
+
     from django.core.management import execute_from_command_line
     execute_from_command_line(sys.argv)
