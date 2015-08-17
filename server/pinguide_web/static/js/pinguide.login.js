@@ -44,7 +44,8 @@ function displayImages(images) {
 	$('#content').html(html);
 
     organize();
-    imagesLoaded( '#container', function() {
+    var imgLoad = imagesLoaded('#container');
+    imgLoad.on( 'progress', function( instance, image ) {
         organize();
     });
 }
