@@ -53,8 +53,8 @@ def getRandomPins(count):
     raise AttributeError('count is more than images available')
 
   while len(selected) < count:
-    from random import random
-    key = keys[int(random() % len(keys))]
+    from random import randint
+    key = keys[randint(0, len(keys) - 1)]
     keys.remove(key)
 
     selected.append(__M_PINS[key])
@@ -86,10 +86,7 @@ def __createModel():
   for user_id in pos_repins.keys():
     pins = pos_repins[user_id]
 
-    count = len(pins)
-    if count <= 0:
-      continue
-
+    count = 0
     avg = [0 for i in range(__FEATURES_COUNT)]
     for pin_id in pins:
       if pin_id not in m_pins.keys():
@@ -99,6 +96,10 @@ def __createModel():
 
       for i in range(__FEATURES_COUNT):
         avg[i] += pin[i]
+        count += 1
+
+    if count == 0:
+      continue
 
     avg = [z * 1.0 / count for z in avg]
 

@@ -66,6 +66,9 @@ def extract_for_dir(dir):
         print("Loading file: %s" % input_file)
         inputs = [caffe.io.load_image(input_file)]
 
+    if len(inputs) == 0:
+        raise AttributeError('No data found by given credentials')
+
     print("Classifying %d inputs." % len(inputs))
 
     __CLASSIFIER.blobs['data'].reshape(50, 3, 227, 227)
