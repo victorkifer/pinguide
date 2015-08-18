@@ -16,6 +16,7 @@ then
 
 	rm -R caffe-master
 	unzip master.zip
+	rm master.zip
 	mv caffe-master caffe
 fi
 
