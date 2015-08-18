@@ -8,10 +8,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class ApiError {
   public static final int CODE_UNKNOWN = Integer.MIN_VALUE;
 
-  @JsonProperty("code")
+  @JsonProperty("status")
   private int code = CODE_UNKNOWN;
 
-  @JsonProperty("errorMessage")
+  @JsonProperty("error")
   private String message;
 
   public static ApiError build(int code, String message) {

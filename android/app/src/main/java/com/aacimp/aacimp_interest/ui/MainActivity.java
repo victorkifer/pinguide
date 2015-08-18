@@ -12,6 +12,8 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
 
+  public static final String KEY_IMAGES = "KEY_IMAGES";
+
   @Bind(R.id.toolbar)
   Toolbar toolbar;
 

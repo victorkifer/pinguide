@@ -13,7 +13,6 @@ public class AACIMPRestApiClientImpl implements RestApiClient {
         .setLogLevel(RestAdapter.LogLevel.FULL)
         .setEndpoint(apiUrl)
         .setConverter(new JacksonConverter())
-        .setRequestInterceptor(new SessionRequestInterceptor())
         .build();
 
     apiService = restAdapter.create(AACIMPRestApiService.class);

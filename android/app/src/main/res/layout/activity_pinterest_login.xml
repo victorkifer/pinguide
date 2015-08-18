@@ -35,27 +35,42 @@
         android:textSize="18sp"
         android:textStyle="italic"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:gravity="center_horizontal"
-        android:paddingTop="48dp"
-        android:text="@string/app_developers"
-        android:textSize="18sp"
-        android:textStyle="bold"/>
+      <EditText
+          android:id="@+id/etNickname"
+          android:layout_marginTop="48dp"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:hint="@string/nickname_hint"
+          android:text="@string/default_nickname"/>
+
+      <EditText
+          android:id="@+id/etBoardname"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:hint="@string/boardname_hint"
+          android:text="@string/default_boardname"/>
 
     <Button
-        android:id="@+id/btnPinterestLogin"
+        android:id="@+id/btnGetRecommendations"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="12dp"
         android:background="@drawable/login_button"
-        android:text="@string/login_with_pinterest"
+        android:text="@string/get_recommendations"
         android:textAllCaps="false"
         android:textColor="@android:color/white"
         android:textSize="20dp"
         android:textStyle="bold"/>
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center_horizontal"
+          android:gravity="center_horizontal"
+          android:paddingTop="48dp"
+          android:text="@string/app_developers"
+          android:textSize="18sp"
+          android:textStyle="bold"/>
 
   </LinearLayout>
 

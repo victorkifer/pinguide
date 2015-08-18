@@ -2,6 +2,9 @@ package com.aacimp.aacimp_interest.api.aacimp;
 
 import android.content.Context;
 
+import com.aacimp.aacimp_interest.api.aacimp.rest.AACIMPRestApiClientImpl;
+import com.aacimp.aacimp_interest.api.aacimp.rest.AACIMPRestApiService;
+
 /**
  * @author Victor Kifer
  * @since 8/11/15
@@ -9,12 +12,15 @@ import android.content.Context;
 public class AACIMPApi {
   private static AACIMPApi sInstance;
 
+  private AACIMPRestApiClientImpl client;
+
   public static void init(Context context) {
     if (sInstance == null) {
       synchronized (AACIMPApi.class) {
         sInstance = new AACIMPApi();
 
         sInstance.context = context;
+        sInstance.client = new AACIMPRestApiClientImpl("http://54.75.70.159/api/v1");
       }
     }
   }
@@ -24,7 +30,6 @@ public class AACIMPApi {
   }
 
   private Context context;
-  private String apiKey;
 
   public static Context getContext() {
     if (sInstance == null) {
@@ -33,11 +38,10 @@ public class AACIMPApi {
     return sInstance.context;
   }
 
-  public String getApiKey() {
-    return apiKey;
-  }
-
-  public void setApiKey(String apiKey) {
-    this.apiKey = apiKey;
+  public static AACIMPRestApiService getClient() {
+    if (sInstance == null) {
+      throw new IllegalStateException("Api wasn't initialized");
+    }
+    return sInstance.client.getApiService();
   }
 }

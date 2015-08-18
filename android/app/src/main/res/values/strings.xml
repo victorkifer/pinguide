@@ -2,7 +2,13 @@
   <string name="app_name">PinGuide</string>
   <string name="app_description">Content-based image recommendations\nfor Pinterest social network</string>
   <string name="app_developers">Victor Kifer\nAndrii Turchyn\nAnastasia Nimets\n\nSupervisor:\nDmytro Karamshuk</string>
-  <string name="login_with_pinterest">Login with Pinterest</string>
+  <string name="get_recommendations">Get recommendations</string>
+
+  <string name="nickname_hint">Enter nickname</string>
+  <string name="boardname_hint">Enter board name</string>
+  
+  <string name="default_nickname">zannoni_impiant</string>
+  <string name="default_boardname">animali</string>
 
   <string name="error_invalid_entity">Cannot parse server response</string>
   <string name="error_no_response">No data received from server</string>
