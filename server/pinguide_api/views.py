@@ -30,7 +30,7 @@ def recommend(req):
       user_features = Extractor.extract_for_dir(dir)
       print 'User features extracted'
 
-      keys, values = RFC.getRandomPins(20000)
+      keys, values = RFC.getRandomPins(5000)
       print 'Random images received'
 
       x = []
@@ -45,9 +45,10 @@ def recommend(req):
       for i in range(len(y)):
         y[i].insert(0, i)
 
-      y = [z for z in y if z[2] >= 0.7]
+      col_pos_predict = 2
+      y = [z for z in y if z[col_pos_predict] >= 0.7]
 
-      y.sort(key=operator.itemgetter(2), reverse=True)
+      y.sort(key=operator.itemgetter(col_pos_predict), reverse=True)
 
       image_ids = set()
       for i in range(len(y)):

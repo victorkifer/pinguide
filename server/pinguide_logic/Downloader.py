@@ -55,13 +55,13 @@ def fetch_images(nickname, board_name):
     time.sleep(0.1)
     link = link["src"]
     filename = link[link.rindex("/"):]
-    with open(dir + filename + '.tmp', 'wb+') as f:
+    with open(dir + filename, 'wb+') as f:
       f.write(__fetch_file(link))
 
     ImageProcessor.resize_and_crop(
-      dir + filename + '.tmp',
       dir + filename,
-      (256, 256),
+      dir + filename,
+      (227, 227),
       crop_type='middle'
     )
 
