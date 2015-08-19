@@ -6,3 +6,4 @@ sudo apt-get install -y python\
 	python-pip
 
 sudo pip install django djangorestframework beautifulsoup4
+pip install wordcloud
