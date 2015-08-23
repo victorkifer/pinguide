@@ -1,9 +1,9 @@
 from config import *
 
 INPUT_IMAGES = INPUT_DATA_FOLDER + '/pin_images.csv'
-INPUT_PINS = INPUT_DATA_FOLDER + '/pins.sample.csv'
-INPUT_REPINS = INPUT_DATA_FOLDER + '/repins.sample.csv'
-INPUT_USERS = INPUT_DATA_FOLDER + '/users.sample.csv'
+INPUT_PINS = INPUT_DATA_FOLDER + '/pins.csv'
+INPUT_REPINS = INPUT_DATA_FOLDER + '/repins.csv'
+INPUT_USERS = INPUT_DATA_FOLDER + '/users.csv'
 
 INPUT_IMAGES_ORIGIN = INPUT_DATA_FOLDER + '/pin_images.csv'
 INPUT_PINS_ORIGIN = INPUT_DATA_FOLDER + '/pins.csv'
