@@ -31,6 +31,11 @@ def strip_execution_count_from_cell(cell):
     """
     if "execution_count" in cell:
         cell["execution_count"] = None
+    if "collapsed" in cell:
+        cell["collapsed"] = False
+    if "prompt_number" in cell:
+        cell.pop("prompt_number")
+
 
 def strip_output_from_cell(cell):
     """
@@ -38,12 +43,10 @@ def strip_output_from_cell(cell):
     and the "outputs" field.
     """
     if not suppress_output:
-	return
+        return
 
     if "outputs" in cell:
         cell["outputs"] = []
-    if "prompt_number" in cell:
-        del cell["prompt_number"]
  
 # Process the notebook
 if ipy_version == 2:
