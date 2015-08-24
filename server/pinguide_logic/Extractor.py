@@ -73,23 +73,18 @@ def extract_for_dir(dir):
 
     __CLASSIFIER.blobs['data'].reshape(50, 3, 227, 227)
 
-    # features = []
     processed_inputs = []
     for input in inputs:
         processed_inputs.append(__TRANSFORMER.preprocess('data', input))
 
     __CLASSIFIER.forward_all(data=np.array(processed_inputs))
 
-    # __CLASSIFIER.blobs['data'].data[...] = __TRANSFORMER.preprocess('data', input)
-    #   __CLASSIFIER.forward()
-    #
-    #   features.append(__CLASSIFIER.blobs['fc8'].data[0].tolist())
+    avg = [0.0 for i in range(1000)]
+    for data in __CLASSIFIER.blobs['fc8'].data:
+        data_list = data.tolist()
+        avg = [x + y for x, y in zip(avg, data_list)]
 
+    count = len(__CLASSIFIER.blobs['fc8'].data)
+    avg = [x / count for x in avg]
 
-    return __CLASSIFIER.blobs['fc8'].data[0].tolist()
-    # Classify.
-    # start = time.time()
-    # predictions = __CLASSIFIER.predict(inputs, not center_only)
-    # print("Done in %.2f s." % (time.time() - start))
-
-    # return predictions
+    return avg
