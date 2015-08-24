@@ -13,9 +13,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Image',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('img_id', models.IntegerField()),
-                ('url', models.CharField(max_length=250)),
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=False, primary_key=True)),
+                ('url', models.CharField(max_length=256)),
             ],
         ),
     ]

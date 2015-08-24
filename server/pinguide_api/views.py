@@ -10,6 +10,23 @@ def index(req):
   return HttpResponse("PinGuide API")
 
 
+def prepare(req):
+  import csv
+
+  INPUT_FOLDER = 'pinguide_logic/data'
+  INPUT_IMAGES = INPUT_FOLDER + '/pin_images.csv'
+
+  with open(INPUT_IMAGES, 'rb') as f_pins:
+      reader = csv.reader(f_pins, delimiter='|')
+      for row in reader:
+          img_id = int(row[0])
+          url = row[1]
+
+          image = Image(id=img_id, url=url)
+          image.save()
+
+  return HttpResponse("Done")
+
 def recommend(req):
   nickname = req.GET.get('nickname', None)
   board_name = req.GET.get('board_name', None)
