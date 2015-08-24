@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from models import *
 
 from pinguide_logic import Downloader,Extractor,RFC
+from pinguide_config import *
 import operator
 
 def index(req):
@@ -47,7 +48,7 @@ def recommend(req):
       user_features = Extractor.extract_for_dir(dir)
       print 'User features extracted'
 
-      keys, values = RFC.getRandomPins(5000)
+      keys, values = RFC.getRandomPins(10000)
       print 'Random images received'
 
       x = []
@@ -62,8 +63,8 @@ def recommend(req):
       for i in range(len(y)):
         y[i].insert(0, i)
 
-      col_pos_predict = 2
-      y = [z for z in y if z[col_pos_predict] >= 0.7]
+      col_pos_predict = RFC.getModel().classes_.tolist().index(1) + 1
+      y = [z for z in y if z[col_pos_predict] >= POSITIVE_PREDICTION_RATE]
 
       y.sort(key=operator.itemgetter(col_pos_predict), reverse=True)
 
@@ -77,10 +78,10 @@ def recommend(req):
 
       selected = []
       for image in images:
-        if image.img_id in image_ids:
+        if image.id in image_ids:
           selected.append(image)
 
-          if len(selected) == 80:
+          if len(selected) == RECOMMENDATION_LIST_SIZE:
             break
 
       json_data = [image.as_json() for image in selected]
