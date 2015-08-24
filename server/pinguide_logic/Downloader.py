@@ -8,6 +8,8 @@ import os
 import shutil
 import ImageProcessor
 
+from pinguide_config import FOLDER_TMP
+
 ##########################################################
 def __fetch_file(link) :
   # user_agent  = 'curl/7.29.0'
@@ -31,7 +33,7 @@ def get_link(nickname, board_name):
 
 #########################################################
 def get_dir(nickname, board_name):
-  return 'out/' + nickname + '/' + board_name + '/'
+  return FOLDER_TMP + '/' + nickname + '/' + board_name + '/'
 
 ##########################################################
 def ensure_dir(dir):
@@ -68,7 +70,7 @@ def fetch_images(nickname, board_name):
 
 ##########################################################
 def remove_download(nickname, board_name):
-  dir = 'out/' + nickname + '/'
+  dir = FOLDER_TMP + '/' + nickname + '/'
   shutil.rmtree(dir, True)
 
 # fetch_images('https://www.pinterest.com/nick_goodey/under-the-sea/')

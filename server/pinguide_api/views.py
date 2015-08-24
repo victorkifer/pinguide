@@ -3,7 +3,7 @@ from django.http import HttpResponse
 
 from models import *
 
-from pinguide_logic import Downloader,Extractor,RFC
+from pinguide_logic import Recommender,Downloader
 from pinguide_config import *
 import operator
 
@@ -13,9 +13,6 @@ def index(req):
 
 def prepare(req):
   import csv
-
-  INPUT_FOLDER = 'pinguide_logic/data'
-  INPUT_IMAGES = INPUT_FOLDER + '/pin_images.csv'
 
   with open(INPUT_IMAGES, 'rb') as f_pins:
       reader = csv.reader(f_pins, delimiter='|')
@@ -41,50 +38,9 @@ def recommend(req):
     }
   else:
     try:
-      Downloader.fetch_images(nickname, board_name)
-      dir = Downloader.get_dir(nickname, board_name)
-      print 'Images downloaded'
+      recommended = Recommender.recommend(nickname, board_name)
 
-      user_features = Extractor.extract_for_dir(dir)
-      print 'User features extracted'
-
-      keys, values = RFC.getRandomPins(10000)
-      print 'Random images received'
-
-      x = []
-      for value in values:
-        x.append(user_features + value)
-
-      y = RFC.getModel().predict_proba(x)
-      print 'Prediction for random images computed'
-
-      y = [z.tolist() for z in y]
-
-      for i in range(len(y)):
-        y[i].insert(0, i)
-
-      col_pos_predict = RFC.getModel().classes_.tolist().index(1) + 1
-      y = [z for z in y if z[col_pos_predict] >= POSITIVE_PREDICTION_RATE]
-
-      y.sort(key=operator.itemgetter(col_pos_predict), reverse=True)
-
-      image_ids = set()
-      for i in range(len(y)):
-        image_ids.add(keys[y[i][0]])
-
-      print 'Recommended image ids founded', len(image_ids)
-
-      images = Image.objects.all()
-
-      selected = []
-      for image in images:
-        if image.id in image_ids:
-          selected.append(image)
-
-          if len(selected) == RECOMMENDATION_LIST_SIZE:
-            break
-
-      json_data = [image.as_json() for image in selected]
+      json_data = [image.as_json() for image in recommended]
 
       response = {
         'status': 0,

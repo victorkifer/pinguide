@@ -4,17 +4,11 @@ import csv
 from sklearn.externals import joblib
 from sklearn.ensemble import RandomForestClassifier
 from logger import log
-
-INPUT_FOLDER = 'pinguide_logic/data'
-CACHE_FOLDER = 'pinguide_logic/cache'
-INPUT_REPINS = INPUT_FOLDER + '/repins.train.csv'
-INPUT_NEGATIVE_REPINS_TRAIN = INPUT_FOLDER + '/repins.train.neg.csv'
-INPUT_PINS = INPUT_FOLDER + '/pins.sample.csv'
-INPUT_USERS = INPUT_FOLDER + '/users.sample.csv'
+from pinguide_config import *
 
 __M_PINS = None
 __MODEL__ = None
-__MODEL_FILE__ = CACHE_FOLDER + '/rfc_model.pkl'
+__MODEL_FILE__ = OUTPUT_MODEL
 
 __FEATURES_FIRST = 15
 __FEATURES_LAST = 1015
