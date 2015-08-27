@@ -5,7 +5,6 @@ from models import *
 
 from pinguide_logic import Recommender,Downloader
 from pinguide_config import *
-import operator
 
 def index(req):
   return HttpResponse("PinGuide API")

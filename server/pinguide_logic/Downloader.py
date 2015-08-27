@@ -63,7 +63,7 @@ def fetch_images(nickname, board_name):
     ImageProcessor.resize_and_crop(
       dir + filename,
       dir + filename,
-      (227, 227),
+      (256, 256),
       crop_type='middle'
     )
 

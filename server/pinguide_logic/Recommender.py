@@ -47,7 +47,7 @@ def __extract_average_user_features(dir):
     return user_features
 
 def __get_pins():
-    keys, values = RFC.getRandomPins(10000)
+    keys, values = RFC.getRandomPins(20000)
     print 'Random images received'
     return keys, values
 

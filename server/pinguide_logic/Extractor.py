@@ -9,7 +9,6 @@ import time
 import caffe
 
 __CLASSIFIER = None
-__TRANSFORMER = None
 
 def init():
     __init_classifier()
@@ -18,34 +17,22 @@ def __init_classifier():
     model_def = CAFFE_DIR + '/models/bvlc_reference_caffenet/deploy.prototxt'
     pretrained_model = CAFFE_DIR + '/models/bvlc_reference_caffenet/bvlc_reference_caffenet.caffemodel'
     mean_file = CAFFE_DIR + '/python/caffe/imagenet/ilsvrc_2012_mean.npy'
-    channel_swap_data = '2,1,0'
-    input_scale = 1.0
+
+    mean = np.load(mean_file).mean(1).mean(1)
+    channel_swap = (2, 1, 0)
     raw_scale = 255.0
-    images_dim = '256,256'
+    # input_scale = 1.0
+    image_dims = (256, 256)
     caffe.set_mode_cpu()
-    print("CPU mode")
 
-    image_dims = [int(s) for s in images_dim.split(',')]
-
-    mean, channel_swap = None, None
-    if mean_file:
-        mean = np.load(mean_file).mean(1).mean(1)
-    if channel_swap_data:
-        channel_swap = [int(s) for s in channel_swap_data.split(',')]
-
-    classifier = caffe.Net(model_def, pretrained_model, caffe.TEST)
-
-    transformer = caffe.io.Transformer({'data': classifier.blobs['data'].data.shape})
-    transformer.set_transpose('data', (2,0,1))
-    transformer.set_mean('data', mean) # mean pixel
-    transformer.set_raw_scale('data', raw_scale)  # the reference model operates on images in [0,255] range instead of [0,1]
-    transformer.set_channel_swap('data', channel_swap)  # the reference model has channels in BGR order instead of RGB
+    classifier = caffe.Classifier(model_def, pretrained_model,
+                                  mean=mean,
+                                  channel_swap=channel_swap,
+                                  raw_scale=raw_scale,
+                                  image_dims=image_dims)
 
     global __CLASSIFIER
     __CLASSIFIER = classifier
-
-    global __TRANSFORMER
-    __TRANSFORMER = transformer
 
 def extract_for_dir(dir):
     input_file = os.path.expanduser(dir)
@@ -54,37 +41,38 @@ def extract_for_dir(dir):
     if __CLASSIFIER is None:
         __init_classifier()
 
-    # Load numpy array (.npy), directory glob (*.jpg), or image file.
-    if input_file.endswith('npy'):
-        print("Loading file: %s" % input_file)
-        inputs = np.load(input_file)
-    elif os.path.isdir(input_file):
-        print("Loading folder: %s" % input_file)
-        inputs =[caffe.io.load_image(im_f)
-                 for im_f in glob.glob(input_file + '/*.' + ext)]
-    else:
-        print("Loading file: %s" % input_file)
-        inputs = [caffe.io.load_image(input_file)]
+    inputs = [caffe.io.load_image(im_f) for im_f in glob.glob(input_file + '/*.' + ext)]
 
     if len(inputs) == 0:
         raise AttributeError('No data found by given credentials')
 
     print("Classifying %d inputs." % len(inputs))
 
-    __CLASSIFIER.blobs['data'].reshape(50, 3, 227, 227)
+    # avg = [0.0 for i in range(1000)]
+    # for image in inputs:
+    #     prediction = __CLASSIFIER.predict([image])
+    #     print prediction.shape
+    #
+    #     a = list(__CLASSIFIER.blobs['fc8'].data[4].flat)
+    #     avg = [x + y for x, y in zip(avg, a)]
+    #
+    # count = len(inputs)
+    # avg = [x / count for x in avg]
 
-    processed_inputs = []
-    for input in inputs:
-        processed_inputs.append(__TRANSFORMER.preprocess('data', input))
+    prediction = __CLASSIFIER.predict(inputs)
+    print prediction.shape
 
-    __CLASSIFIER.forward_all(data=np.array(processed_inputs))
+    # avg = list(__CLASSIFIER.blobs['fc8'].data[4].flat)
+    #
+    # a = list(__CLASSIFIER.blobs['fc7'].data[4].flat)
+    # print len(a)
+    # a = list(prediction[0]) + a
+    # print len(a)
 
     avg = [0.0 for i in range(1000)]
-    for data in __CLASSIFIER.blobs['fc8'].data:
-        data_list = data.tolist()
-        avg = [x + y for x, y in zip(avg, data_list)]
+    for line in prediction.tolist():
+        avg = [x + y for x, y in zip(avg, line)]
 
-    count = len(__CLASSIFIER.blobs['fc8'].data)
-    avg = [x / count for x in avg]
+    avg = [x / prediction.shape[0] for x in avg]
 
     return avg
